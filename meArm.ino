@@ -1,66 +1,82 @@
 #include <Servo.h>
 
-#define CONTROLE_1 A0
-#define CONTROLE_2 A1
-#define CONTROLE_3 A2
-#define CONTROLE_4 A3
+//HorizontalDireito
+#define CONTROLE_HOR_DIR A1
 
-#define PORT_SERVO_1 2
-#define PORT_SERVO_2 3
-#define PORT_SERVO_3 4
-#define PORT_SERVO_4 5
+//VerticalDireito
+#define CONTROLE_VER_DIR A0
 
-int controle1val = 0;
-int controle2val = 0;
-int controle3val = 0;
-int controle4val = 0;
+//HorizontalEsquerdo
+#define CONTROLE_HOR_ESQ A2
 
-int servo1ang = 90;
-int servo2ang = 90;
-int servo3ang = 90;
-int servo4ang = 90;
+//VerticalEsquerdo
+#define CONTROLE_VER_ESQ A3
 
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
+//Garra
+#define PORT_SERVO_GARRA 2
+
+//Base
+#define PORT_SERVO_BASE 3
+
+//CimaBaixo
+#define PORT_SERVO_CIMABAIXO 4
+
+//LongePerto
+#define PORT_SERVO_PERTOLONGE 5
+
+int valCtrHorDir = 0;
+int valCtrVerDir = 0;
+int valCtrHorEsq = 0;
+int valCtrVerEsq = 0;
+
+int angServoGarra = 90;
+int angServoBase = 90;
+int angServoCimaBaixo = 90;
+int angServoPertoLonge = 90;
+
+Servo servoGarra;
+Servo servoBase;
+Servo servoCimaBaixo;
+Servo servoPertoLonge;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(CONTROLE_1, INPUT);
-  pinMode(CONTROLE_2, INPUT);
-  pinMode(CONTROLE_3, INPUT);
-  pinMode(CONTROLE_4, INPUT);
-  servo1.attach(PORT_SERVO_1);
-  servo2.attach(PORT_SERVO_2);
-  servo3.attach(PORT_SERVO_3);
-  servo4.attach(PORT_SERVO_4);
-  servo1.write(90);
-  servo2.write(90);
-  servo3.write(90);
-  servo4.write(90);
+  pinMode(CONTROLE_HOR_DIR, INPUT);
+  pinMode(CONTROLE_VER_DIR, INPUT);
+  pinMode(CONTROLE_HOR_ESQ, INPUT);
+  pinMode(CONTROLE_VER_ESQ, INPUT);
+  servoGarra.attach(PORT_SERVO_GARRA);
+  servoBase.attach(PORT_SERVO_BASE);
+  servoCimaBaixo.attach(PORT_SERVO_CIMABAIXO);
+  servoPertoLonge.attach(PORT_SERVO_PERTOLONGE);
+
+  //Coloca todos os servos em posição de 90 graus
+  servoGarra.write(110);
+  servoBase.write(90);
+  servoCimaBaixo.write(90);
+  servoPertoLonge.write(90);
 }
 
 void loop() {
-  controle1val = analogRead(CONTROLE_1);
-  controle2val = analogRead(CONTROLE_2);
-  controle3val = analogRead(CONTROLE_3);
-  controle4val = analogRead(CONTROLE_4);
+  valCtrHorDir = analogRead(CONTROLE_HOR_DIR);
+  valCtrVerDir = analogRead(CONTROLE_VER_DIR);
+  valCtrHorEsq = analogRead(CONTROLE_HOR_ESQ);
+  valCtrVerEsq = analogRead(CONTROLE_VER_ESQ);
+  
+  valCtrVerDir = (valCtrVerDir - 1023) * -1;
+  valCtrVerEsq = (valCtrVerEsq - 1023) * -1;
 
-  controle1val = (controle1val - 1023) * -1;
-  controle3val = (controle3val - 1023) * -1;
-
-  servo1ang = map(controle4val, 0, 1023, 0, 180);
-  servo2ang = map(controle3val, 0, 1023, 0, 180);
-  servo3ang = map(controle2val, 0, 1023, 0, 180);
-  servo4ang = map(controle1val, 0, 1023, 0, 180);
-
-  if(servo1ang < 110){
-    servo1ang = 110;
+  angServoGarra = map(valCtrHorEsq, 0, 1023, 0, 180);
+  angServoBase = map(valCtrHorDir, 0, 1023, 0, 180);
+  angServoPertoLonge = map(valCtrVerDir, 0, 1023, 0, 180);
+  angServoCimaBaixo = map(valCtrVerEsq, 0, 1023, 0, 180);
+  Serial.println(angServoGarra);
+  if(angServoGarra < 110){
+    angServoGarra = 110;
   }
   
-  servo1.write(servo1ang);
-  servo2.write(servo2ang);
-  servo3.write(servo3ang);
-  servo4.write(servo4ang);
+  servoGarra.write(angServoGarra);
+  servoBase.write(angServoBase);
+  servoCimaBaixo.write(angServoCimaBaixo);
+  servoPertoLonge.write(angServoPertoLonge);
 }
