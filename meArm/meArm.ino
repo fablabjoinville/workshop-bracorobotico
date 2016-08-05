@@ -58,23 +58,31 @@ void setup() {
 }
 
 void loop() {
+  //Le os valores de cada eixo dos joysticks
   valCtrHorDir = analogRead(CONTROLE_HOR_DIR);
   valCtrVerDir = analogRead(CONTROLE_VER_DIR);
   valCtrHorEsq = analogRead(CONTROLE_HOR_ESQ);
   valCtrVerEsq = analogRead(CONTROLE_VER_ESQ);
-  
+
+  //Inverte a direção
   valCtrVerDir = (valCtrVerDir - 1023) * -1;
   valCtrVerEsq = (valCtrVerEsq - 1023) * -1;
 
+  //Converte os valores dos joystics para os valores
+  //aceitos pelos servos
   angServoGarra = map(valCtrHorEsq, 0, 1023, 0, 180);
   angServoBase = map(valCtrHorDir, 0, 1023, 0, 180);
   angServoPertoLonge = map(valCtrVerDir, 0, 1023, 0, 180);
   angServoCimaBaixo = map(valCtrVerEsq, 0, 1023, 0, 180);
-  Serial.println(angServoGarra);
+
+  //Limita o ângulo máximo
+  //de abertura da garra
   if(angServoGarra < 110){
     angServoGarra = 110;
   }
-  
+
+  //Posiciona os servos de arcordo
+  //com os ângulos convertidos
   servoGarra.write(angServoGarra);
   servoBase.write(angServoBase);
   servoCimaBaixo.write(angServoCimaBaixo);
